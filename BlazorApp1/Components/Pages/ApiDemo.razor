@@ -1,0 +1,21 @@
+﻿@page "/apidemo"
+@inject IHttpClientFactory clientFactory
+@using BlazorApp1.Data
+<div class="container">
+    <DishesList @bind-Dishes="dishes"></DishesList>
+</div>
+@code {
+    [Parameter]
+    public IEnumerable<ListViewModel> dishes { get; set; }
+
+    string apiBaseAddress = "https://localhost:7130/Api/Dishes";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Создаем экземпляр HttpClient с использованием clientFactory
+        var client = clientFactory.CreateClient();
+
+        // Выполняем запрос к API
+        dishes = await client.GetFromJsonAsync<IEnumerable<ListViewModel>>(apiBaseAddress);
+    }
+}
